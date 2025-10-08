@@ -4,6 +4,9 @@ const Index = () => {
   // Estado da paginação
   const [currentPage, setCurrentPage] = useState(1);
   const machinesPerPage = 12;
+  
+  // Estado do modal de tela cheia
+  const [selectedMachine, setSelectedMachine] = useState<typeof allMachines[0] | null>(null);
 
   // Dados fixos de máquinas (expandido para 3 páginas)
   const allMachines = [
@@ -84,7 +87,11 @@ const Index = () => {
       {/* Grid de Máquinas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         {currentMachines.map((machine) => (
-          <article key={machine.id} className="bg-card rounded-lg border border-border overflow-hidden hover:border-primary/50 transition-colors">
+          <article 
+            key={machine.id} 
+            className="bg-card rounded-lg border border-border overflow-hidden hover:border-primary/50 transition-all cursor-pointer hover:scale-105"
+            onClick={() => setSelectedMachine(machine)}
+          >
             {/* Preview da Tela */}
             <div className="aspect-video bg-[hsl(var(--screen-bg))] relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
@@ -162,6 +169,88 @@ const Index = () => {
           Próximo
         </button>
       </nav>
+
+      {/* Modal de Tela Cheia */}
+      {selectedMachine && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in"
+          onClick={() => setSelectedMachine(null)}
+        >
+          <div 
+            className="bg-card rounded-xl border-2 border-border w-full max-w-6xl max-h-[90vh] overflow-hidden animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header do Modal */}
+            <div className="flex items-center justify-between p-6 border-b border-border bg-secondary/50">
+              <div className="flex items-center gap-4">
+                <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div>
+                  <h2 className="text-2xl font-bold text-card-foreground">{selectedMachine.name}</h2>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div 
+                      className={`w-3 h-3 rounded-full ${
+                        selectedMachine.online 
+                          ? 'bg-[hsl(var(--success))] shadow-[0_0_8px_hsl(var(--success))]' 
+                          : 'bg-[hsl(var(--error))] shadow-[0_0_8px_hsl(var(--error))]'
+                      }`}
+                    />
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {selectedMachine.online ? 'Online' : 'Offline'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedMachine(null)}
+                className="w-10 h-10 rounded-lg hover:bg-secondary transition-colors flex items-center justify-center text-muted-foreground hover:text-foreground"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Preview da Tela em Tamanho Grande */}
+            <div className="p-6">
+              <div className="aspect-video bg-[hsl(var(--screen-bg))] rounded-lg relative overflow-hidden border border-border">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Simulação de conteúdo da tela */}
+                  <div className="w-full h-full p-12 space-y-6">
+                    <div className="h-8 bg-[hsl(var(--screen-content))] rounded w-3/4"></div>
+                    <div className="h-8 bg-[hsl(var(--screen-content))] rounded w-1/2"></div>
+                    <div className="h-48 bg-[hsl(var(--screen-content))] rounded mt-8"></div>
+                    <div className="grid grid-cols-3 gap-6 mt-8">
+                      <div className="h-32 bg-[hsl(var(--screen-content))] rounded"></div>
+                      <div className="h-32 bg-[hsl(var(--screen-content))] rounded"></div>
+                      <div className="h-32 bg-[hsl(var(--screen-content))] rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Info adicional */}
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                <div className="bg-secondary/50 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">IP Address</p>
+                  <p className="font-semibold text-foreground">192.168.1.{selectedMachine.id}</p>
+                </div>
+                <div className="bg-secondary/50 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Última Conexão</p>
+                  <p className="font-semibold text-foreground">
+                    {selectedMachine.online ? 'Agora' : '2 horas atrás'}
+                  </p>
+                </div>
+                <div className="bg-secondary/50 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Sistema</p>
+                  <p className="font-semibold text-foreground">Windows 11</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
