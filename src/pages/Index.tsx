@@ -1,6 +1,13 @@
+import { useState } from "react";
+
 const Index = () => {
-  // Dados fixos de máquinas
-  const machines = [
+  // Estado da paginação
+  const [currentPage, setCurrentPage] = useState(1);
+  const machinesPerPage = 12;
+
+  // Dados fixos de máquinas (expandido para 3 páginas)
+  const allMachines = [
+    // Página 1
     { id: 1, name: "Workstation-01", online: true },
     { id: 2, name: "Workstation-02", online: true },
     { id: 3, name: "Server-Alpha", online: false },
@@ -13,19 +20,70 @@ const Index = () => {
     { id: 10, name: "Workstation-06", online: true },
     { id: 11, name: "Test-Machine", online: true },
     { id: 12, name: "Workstation-07", online: false },
+    // Página 2
+    { id: 13, name: "Workstation-08", online: true },
+    { id: 14, name: "Server-Gamma", online: true },
+    { id: 15, name: "Workstation-09", online: true },
+    { id: 16, name: "Production-01", online: false },
+    { id: 17, name: "Workstation-10", online: true },
+    { id: 18, name: "Dev-Machine-02", online: true },
+    { id: 19, name: "Workstation-11", online: true },
+    { id: 20, name: "QA-Machine", online: true },
+    { id: 21, name: "Workstation-12", online: false },
+    { id: 22, name: "Server-Delta", online: true },
+    { id: 23, name: "Workstation-13", online: true },
+    { id: 24, name: "Workstation-14", online: true },
+    // Página 3
+    { id: 25, name: "Workstation-15", online: true },
+    { id: 26, name: "Server-Epsilon", online: false },
+    { id: 27, name: "Workstation-16", online: true },
+    { id: 28, name: "Staging-01", online: true },
+    { id: 29, name: "Workstation-17", online: true },
+    { id: 30, name: "Dev-Machine-03", online: false },
+    { id: 31, name: "Workstation-18", online: true },
+    { id: 32, name: "Build-Server", online: true },
+    { id: 33, name: "Workstation-19", online: true },
+    { id: 34, name: "Workstation-20", online: true },
+    { id: 35, name: "Server-Zeta", online: false },
+    { id: 36, name: "Workstation-21", online: true },
   ];
+
+  // Cálculos de paginação
+  const totalPages = Math.ceil(allMachines.length / machinesPerPage);
+  const indexOfLastMachine = currentPage * machinesPerPage;
+  const indexOfFirstMachine = indexOfLastMachine - machinesPerPage;
+  const currentMachines = allMachines.slice(indexOfFirstMachine, indexOfLastMachine);
+
+  // Funções de navegação
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Monitoramento de Máquinas</h1>
-        <p className="text-muted-foreground">12 máquinas visualizadas | Página 1 de 3</p>
+        <p className="text-muted-foreground">
+          {currentMachines.length} máquinas visualizadas | Página {currentPage} de {totalPages}
+        </p>
       </header>
 
       {/* Grid de Máquinas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        {machines.map((machine) => (
+        {currentMachines.map((machine) => (
           <article key={machine.id} className="bg-card rounded-lg border border-border overflow-hidden hover:border-primary/50 transition-colors">
             {/* Preview da Tela */}
             <div className="aspect-video bg-[hsl(var(--screen-bg))] relative overflow-hidden">
@@ -74,24 +132,33 @@ const Index = () => {
       <nav className="flex items-center justify-center gap-2" aria-label="Paginação">
         <button 
           className="px-4 py-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled
+          disabled={currentPage === 1}
+          onClick={goToPreviousPage}
         >
           Anterior
         </button>
         
         <div className="flex gap-2">
-          <button className="w-10 h-10 rounded-lg bg-primary text-primary-foreground font-semibold">
-            1
-          </button>
-          <button className="w-10 h-10 rounded-lg border border-border bg-card text-card-foreground hover:bg-secondary transition-colors">
-            2
-          </button>
-          <button className="w-10 h-10 rounded-lg border border-border bg-card text-card-foreground hover:bg-secondary transition-colors">
-            3
-          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+            <button
+              key={pageNumber}
+              onClick={() => goToPage(pageNumber)}
+              className={`w-10 h-10 rounded-lg font-semibold transition-colors ${
+                currentPage === pageNumber
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border border-border bg-card text-card-foreground hover:bg-secondary'
+              }`}
+            >
+              {pageNumber}
+            </button>
+          ))}
         </div>
 
-        <button className="px-4 py-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-secondary transition-colors">
+        <button 
+          className="px-4 py-2 rounded-lg border border-border bg-card text-card-foreground hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={currentPage === totalPages}
+          onClick={goToNextPage}
+        >
           Próximo
         </button>
       </nav>
