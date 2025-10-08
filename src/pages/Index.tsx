@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, UserCircle } from "lucide-react";
 
 const Index = () => {
   // Estado da paginação
@@ -8,6 +8,7 @@ const Index = () => {
   
   // Estado da busca
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string>("todas");
   
   // Estado do modal de tela cheia
   const [selectedMachine, setSelectedMachine] = useState<typeof allMachines[0] | null>(null);
@@ -15,50 +16,55 @@ const Index = () => {
   // Dados fixos de máquinas (expandido para 3 páginas)
   const allMachines = [
     // Página 1
-    { id: 1, name: "Workstation-01", online: true },
-    { id: 2, name: "Workstation-02", online: true },
-    { id: 3, name: "Server-Alpha", online: false },
-    { id: 4, name: "Workstation-03", online: true },
-    { id: 5, name: "Dev-Machine-01", online: true },
-    { id: 6, name: "Workstation-04", online: true },
-    { id: 7, name: "Server-Beta", online: true },
-    { id: 8, name: "Workstation-05", online: false },
-    { id: 9, name: "Design-Station", online: true },
-    { id: 10, name: "Workstation-06", online: true },
-    { id: 11, name: "Test-Machine", online: true },
-    { id: 12, name: "Workstation-07", online: false },
+    { id: 1, name: "Workstation-01", online: true, role: "Desenvolvedor" },
+    { id: 2, name: "Workstation-02", online: true, role: "Designer" },
+    { id: 3, name: "Server-Alpha", online: false, role: "Administrador" },
+    { id: 4, name: "Workstation-03", online: true, role: "Analista" },
+    { id: 5, name: "Dev-Machine-01", online: true, role: "Desenvolvedor" },
+    { id: 6, name: "Workstation-04", online: true, role: "Gerente" },
+    { id: 7, name: "Server-Beta", online: true, role: "Administrador" },
+    { id: 8, name: "Workstation-05", online: false, role: "Designer" },
+    { id: 9, name: "Design-Station", online: true, role: "Designer" },
+    { id: 10, name: "Workstation-06", online: true, role: "Desenvolvedor" },
+    { id: 11, name: "Test-Machine", online: true, role: "Analista" },
+    { id: 12, name: "Workstation-07", online: false, role: "Desenvolvedor" },
     // Página 2
-    { id: 13, name: "Workstation-08", online: true },
-    { id: 14, name: "Server-Gamma", online: true },
-    { id: 15, name: "Workstation-09", online: true },
-    { id: 16, name: "Production-01", online: false },
-    { id: 17, name: "Workstation-10", online: true },
-    { id: 18, name: "Dev-Machine-02", online: true },
-    { id: 19, name: "Workstation-11", online: true },
-    { id: 20, name: "QA-Machine", online: true },
-    { id: 21, name: "Workstation-12", online: false },
-    { id: 22, name: "Server-Delta", online: true },
-    { id: 23, name: "Workstation-13", online: true },
-    { id: 24, name: "Workstation-14", online: true },
+    { id: 13, name: "Workstation-08", online: true, role: "Desenvolvedor" },
+    { id: 14, name: "Server-Gamma", online: true, role: "Administrador" },
+    { id: 15, name: "Workstation-09", online: true, role: "Designer" },
+    { id: 16, name: "Production-01", online: false, role: "Gerente" },
+    { id: 17, name: "Workstation-10", online: true, role: "Desenvolvedor" },
+    { id: 18, name: "Dev-Machine-02", online: true, role: "Desenvolvedor" },
+    { id: 19, name: "Workstation-11", online: true, role: "Analista" },
+    { id: 20, name: "QA-Machine", online: true, role: "Analista" },
+    { id: 21, name: "Workstation-12", online: false, role: "Designer" },
+    { id: 22, name: "Server-Delta", online: true, role: "Administrador" },
+    { id: 23, name: "Workstation-13", online: true, role: "Desenvolvedor" },
+    { id: 24, name: "Workstation-14", online: true, role: "Gerente" },
     // Página 3
-    { id: 25, name: "Workstation-15", online: true },
-    { id: 26, name: "Server-Epsilon", online: false },
-    { id: 27, name: "Workstation-16", online: true },
-    { id: 28, name: "Staging-01", online: true },
-    { id: 29, name: "Workstation-17", online: true },
-    { id: 30, name: "Dev-Machine-03", online: false },
-    { id: 31, name: "Workstation-18", online: true },
-    { id: 32, name: "Build-Server", online: true },
-    { id: 33, name: "Workstation-19", online: true },
-    { id: 34, name: "Workstation-20", online: true },
-    { id: 35, name: "Server-Zeta", online: false },
-    { id: 36, name: "Workstation-21", online: true },
+    { id: 25, name: "Workstation-15", online: true, role: "Designer" },
+    { id: 26, name: "Server-Epsilon", online: false, role: "Administrador" },
+    { id: 27, name: "Workstation-16", online: true, role: "Desenvolvedor" },
+    { id: 28, name: "Staging-01", online: true, role: "Analista" },
+    { id: 29, name: "Workstation-17", online: true, role: "Desenvolvedor" },
+    { id: 30, name: "Dev-Machine-03", online: false, role: "Desenvolvedor" },
+    { id: 31, name: "Workstation-18", online: true, role: "Designer" },
+    { id: 32, name: "Build-Server", online: true, role: "Administrador" },
+    { id: 33, name: "Workstation-19", online: true, role: "Gerente" },
+    { id: 34, name: "Workstation-20", online: true, role: "Desenvolvedor" },
+    { id: 35, name: "Server-Zeta", online: false, role: "Administrador" },
+    { id: 36, name: "Workstation-21", online: true, role: "Analista" },
   ];
 
-  // Filtrar máquinas pela busca
-  const filteredMachines = allMachines.filter(machine =>
-    machine.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Lista única de funções para o filtro
+  const uniqueRoles = Array.from(new Set(allMachines.map(m => m.role)));
+
+  // Filtrar máquinas pela busca e função
+  const filteredMachines = allMachines.filter(machine => {
+    const matchesSearch = machine.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = selectedRole === "todas" || machine.role === selectedRole;
+    return matchesSearch && matchesRole;
+  });
 
   // Cálculos de paginação
   const totalPages = Math.ceil(filteredMachines.length / machinesPerPage);
@@ -86,27 +92,68 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
-      <header className="mb-8 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Monitoramento de Máquinas</h1>
-          <p className="text-muted-foreground">
-            {currentMachines.length} máquinas visualizadas | Página {currentPage} de {totalPages}
-          </p>
+      <header className="mb-8">
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Monitoramento de Máquinas</h1>
+            <p className="text-muted-foreground">
+              {currentMachines.length} máquinas visualizadas | Página {currentPage} de {totalPages}
+            </p>
+          </div>
+          
+          {/* Campo de Busca */}
+          <div className="relative min-w-[280px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Buscar por nome..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            />
+          </div>
         </div>
-        
-        {/* Campo de Busca */}
-        <div className="relative min-w-[280px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Buscar por nome..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // Reset para primeira página ao buscar
-            }}
-            className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-          />
+
+        {/* Filtro de Função */}
+        <div className="flex items-center gap-3">
+          <label className="text-sm font-medium text-foreground flex items-center gap-2">
+            <UserCircle className="w-4 h-4" />
+            Filtrar por função:
+          </label>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => {
+                setSelectedRole("todas");
+                setCurrentPage(1);
+              }}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                selectedRole === "todas"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card border border-border text-card-foreground hover:bg-secondary"
+              }`}
+            >
+              Todas
+            </button>
+            {uniqueRoles.map((role) => (
+              <button
+                key={role}
+                onClick={() => {
+                  setSelectedRole(role);
+                  setCurrentPage(1);
+                }}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  selectedRole === role
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card border border-border text-card-foreground hover:bg-secondary"
+                }`}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -150,12 +197,16 @@ const Index = () => {
 
             {/* Info da Máquina */}
             <div className="p-4">
-              <h3 className="font-semibold text-card-foreground flex items-center gap-2">
+              <h3 className="font-semibold text-card-foreground flex items-center gap-2 mb-2">
                 <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 {machine.name}
               </h3>
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <UserCircle className="w-3.5 h-3.5" />
+                {machine.role}
+              </p>
             </div>
           </article>
         ))}
@@ -257,7 +308,11 @@ const Index = () => {
               </div>
               
               {/* Info adicional */}
-              <div className="mt-6 grid grid-cols-3 gap-4">
+              <div className="mt-6 grid grid-cols-4 gap-4">
+                <div className="bg-secondary/50 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-1">Função</p>
+                  <p className="font-semibold text-foreground">{selectedMachine.role}</p>
+                </div>
                 <div className="bg-secondary/50 rounded-lg p-4">
                   <p className="text-sm text-muted-foreground mb-1">IP Address</p>
                   <p className="font-semibold text-foreground">192.168.1.{selectedMachine.id}</p>
