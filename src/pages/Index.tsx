@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { Search } from "lucide-react";
 
 const Index = () => {
   // Estado da paginação
   const [currentPage, setCurrentPage] = useState(1);
   const machinesPerPage = 12;
+  
+  // Estado da busca
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Estado do modal de tela cheia
   const [selectedMachine, setSelectedMachine] = useState<typeof allMachines[0] | null>(null);
@@ -51,11 +55,16 @@ const Index = () => {
     { id: 36, name: "Workstation-21", online: true },
   ];
 
+  // Filtrar máquinas pela busca
+  const filteredMachines = allMachines.filter(machine =>
+    machine.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // Cálculos de paginação
-  const totalPages = Math.ceil(allMachines.length / machinesPerPage);
+  const totalPages = Math.ceil(filteredMachines.length / machinesPerPage);
   const indexOfLastMachine = currentPage * machinesPerPage;
   const indexOfFirstMachine = indexOfLastMachine - machinesPerPage;
-  const currentMachines = allMachines.slice(indexOfFirstMachine, indexOfLastMachine);
+  const currentMachines = filteredMachines.slice(indexOfFirstMachine, indexOfLastMachine);
 
   // Funções de navegação
   const goToNextPage = () => {
@@ -77,11 +86,28 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Monitoramento de Máquinas</h1>
-        <p className="text-muted-foreground">
-          {currentMachines.length} máquinas visualizadas | Página {currentPage} de {totalPages}
-        </p>
+      <header className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Monitoramento de Máquinas</h1>
+          <p className="text-muted-foreground">
+            {currentMachines.length} máquinas visualizadas | Página {currentPage} de {totalPages}
+          </p>
+        </div>
+        
+        {/* Campo de Busca */}
+        <div className="relative min-w-[280px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Buscar por nome..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); // Reset para primeira página ao buscar
+            }}
+            className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          />
+        </div>
       </header>
 
       {/* Grid de Máquinas */}
