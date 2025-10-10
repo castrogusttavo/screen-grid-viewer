@@ -249,15 +249,15 @@ const Index = () => {
       {/* Modal de Tela Cheia */}
       {selectedMachine && (
         <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col animate-fade-in"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in"
           onClick={() => setSelectedMachine(null)}
         >
           <div 
-            className="bg-card w-full h-full flex flex-col animate-scale-in"
+            className="bg-card rounded-xl border-2 border-border w-full max-w-6xl max-h-[95vh] sm:max-h-[90vh] overflow-auto animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header do Modal */}
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-secondary/50 flex-shrink-0">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-secondary/50 sticky top-0 z-10">
               <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <svg className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -289,12 +289,36 @@ const Index = () => {
             </div>
 
             {/* Preview da Tela em Tamanho Grande */}
-            <div className="flex-1 w-full bg-[hsl(var(--screen-bg))] relative overflow-hidden">
-              <iframe
-                src={`http://192.168.100.197:6080/vnc.html?autoconnect=true&path=?token=${selectedMachine.name}`}
-                className="w-full h-full border-0"
-                title={`VNC ${selectedMachine.name}`}
-              />
+            <div className="p-3 sm:p-6">
+              <div className="w-full h-[50vh] sm:h-[60vh] bg-[hsl(var(--screen-bg))] rounded-lg relative overflow-hidden border border-border">
+                <iframe
+                  src={`http://192.168.100.197:6080/vnc.html?autoconnect=true&path=?token=${selectedMachine.name}`}
+                  className="w-full h-full border-0"
+                  title={`VNC ${selectedMachine.name}`}
+                />
+              </div>
+              
+              {/* Info adicional */}
+              <div className="mt-4 sm:mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="bg-secondary/50 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1">Função</p>
+                  <p className="font-semibold text-sm sm:text-base text-foreground truncate">{selectedMachine.role}</p>
+                </div>
+                <div className="bg-secondary/50 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1">IP Address</p>
+                  <p className="font-semibold text-sm sm:text-base text-foreground">192.168.1.{selectedMachine.id}</p>
+                </div>
+                <div className="bg-secondary/50 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1">Última Conexão</p>
+                  <p className="font-semibold text-sm sm:text-base text-foreground">
+                    {selectedMachine.online ? 'Agora' : '2h atrás'}
+                  </p>
+                </div>
+                <div className="bg-secondary/50 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-1">Sistema</p>
+                  <p className="font-semibold text-sm sm:text-base text-foreground">Windows 11</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
