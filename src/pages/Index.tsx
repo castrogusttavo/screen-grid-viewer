@@ -99,7 +99,7 @@ const Index = () => {
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
           <div className="flex-1 flex gap-4">
             <img src="https://painel.stratustelecom.com.br/images/stlogo.png" height="52px" />
-            <div classsName="flex items-center">
+            <div className="flex items-center">
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Monitoramento de Máquinas</h1>
               <p className="text-sm sm:text-base text-muted-foreground">
                 {currentMachines.length} máquinas | Página {currentPage}/{totalPages}
