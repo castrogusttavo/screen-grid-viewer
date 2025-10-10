@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+canva {
+    width: 100% !important;
+    height: 535px !important;
+}
