@@ -1,5 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, UserCircle } from "lucide-react";
+
+interface Machine {
+  id: number;
+  name: string;
+  online: boolean;
+  role: string;
+  hostport?: string;
+}
 
 const Index = () => {
   // Estado da paginação
@@ -11,50 +19,37 @@ const Index = () => {
   const [selectedRole, setSelectedRole] = useState<string>("todas");
   
   // Estado do modal de tela cheia
-  const [selectedMachine, setSelectedMachine] = useState<typeof allMachines[0] | null>(null);
+  const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
 
-  // Dados fixos de máquinas (expandido para 3 páginas)
-  const allMachines = [
-    // Página 1
-    { id: 1, name: "Workstation-01", online: true, role: "Desenvolvedor" },
-    { id: 2, name: "Workstation-02", online: true, role: "Designer" },
-    { id: 3, name: "Server-Alpha", online: false, role: "Administrador" },
-    { id: 4, name: "Workstation-03", online: true, role: "Analista" },
-    { id: 5, name: "Dev-Machine-01", online: true, role: "Desenvolvedor" },
-    { id: 6, name: "Workstation-04", online: true, role: "Gerente" },
-    { id: 7, name: "Server-Beta", online: true, role: "Administrador" },
-    { id: 8, name: "Workstation-05", online: false, role: "Designer" },
-    { id: 9, name: "Design-Station", online: true, role: "Designer" },
-    { id: 10, name: "Workstation-06", online: true, role: "Desenvolvedor" },
-    { id: 11, name: "Test-Machine", online: true, role: "Analista" },
-    { id: 12, name: "Workstation-07", online: false, role: "Desenvolvedor" },
-    // Página 2
-    { id: 13, name: "Workstation-08", online: true, role: "Desenvolvedor" },
-    { id: 14, name: "Server-Gamma", online: true, role: "Administrador" },
-    { id: 15, name: "Workstation-09", online: true, role: "Designer" },
-    { id: 16, name: "Production-01", online: false, role: "Gerente" },
-    { id: 17, name: "Workstation-10", online: true, role: "Desenvolvedor" },
-    { id: 18, name: "Dev-Machine-02", online: true, role: "Desenvolvedor" },
-    { id: 19, name: "Workstation-11", online: true, role: "Analista" },
-    { id: 20, name: "QA-Machine", online: true, role: "Analista" },
-    { id: 21, name: "Workstation-12", online: false, role: "Designer" },
-    { id: 22, name: "Server-Delta", online: true, role: "Administrador" },
-    { id: 23, name: "Workstation-13", online: true, role: "Desenvolvedor" },
-    { id: 24, name: "Workstation-14", online: true, role: "Gerente" },
-    // Página 3
-    { id: 25, name: "Workstation-15", online: true, role: "Designer" },
-    { id: 26, name: "Server-Epsilon", online: false, role: "Administrador" },
-    { id: 27, name: "Workstation-16", online: true, role: "Desenvolvedor" },
-    { id: 28, name: "Staging-01", online: true, role: "Analista" },
-    { id: 29, name: "Workstation-17", online: true, role: "Desenvolvedor" },
-    { id: 30, name: "Dev-Machine-03", online: false, role: "Desenvolvedor" },
-    { id: 31, name: "Workstation-18", online: true, role: "Designer" },
-    { id: 32, name: "Build-Server", online: true, role: "Administrador" },
-    { id: 33, name: "Workstation-19", online: true, role: "Gerente" },
-    { id: 34, name: "Workstation-20", online: true, role: "Desenvolvedor" },
-    { id: 35, name: "Server-Zeta", online: false, role: "Administrador" },
-    { id: 36, name: "Workstation-21", online: true, role: "Analista" },
-  ];
+  // Estado das máquinas da API
+  const [allMachines, setAllMachines] = useState<Machine[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Buscar dados da API
+  useEffect(() => {
+    const fetchMachines = async () => {
+      try {
+        const response = await fetch('http://192.168.100.197:5000/api/vnc-tokens');
+        const data = await response.json();
+        
+        const machines: Machine[] = data.map((item: { hostport: string; token: string }, index: number) => ({
+          id: index + 1,
+          name: item.token,
+          online: true,
+          role: "Funcionário",
+          hostport: item.hostport
+        }));
+        
+        setAllMachines(machines);
+      } catch (error) {
+        console.error('Erro ao buscar máquinas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMachines();
+  }, []);
 
   // Lista única de funções para o filtro
   const uniqueRoles = Array.from(new Set(allMachines.map(m => m.role)));
@@ -88,6 +83,14 @@ const Index = () => {
   const goToPage = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando máquinas...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">
