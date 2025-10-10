@@ -169,10 +169,11 @@ const Index = () => {
             onClick={() => setSelectedMachine(machine)}
           >
             {/* Preview da Tela */}
-            <div className="aspect-video bg-[hsl(var(--screen-bg))] relative overflow-hidden">
+            <div className="h-40 sm:h-48 bg-[hsl(var(--screen-bg))] relative overflow-hidden">
               <iframe
                 src={`http://192.168.100.197:6080/vnc.html?autoconnect=true&path=?token=${machine.name}`}
-                className="w-full h-full border-0"
+                className="w-full h-full border-0 pointer-events-none scale-[0.4] origin-top-left"
+                style={{ width: '250%', height: '250%' }}
                 title={`VNC ${machine.name}`}
               />
               
@@ -289,7 +290,7 @@ const Index = () => {
 
             {/* Preview da Tela em Tamanho Grande */}
             <div className="p-3 sm:p-6">
-              <div className="aspect-video bg-[hsl(var(--screen-bg))] rounded-lg relative overflow-hidden border border-border">
+              <div className="w-full h-[50vh] sm:h-[60vh] bg-[hsl(var(--screen-bg))] rounded-lg relative overflow-hidden border border-border">
                 <iframe
                   src={`http://192.168.100.197:6080/vnc.html?autoconnect=true&path=?token=${selectedMachine.name}`}
                   className="w-full h-full border-0"
