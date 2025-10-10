@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
       host: '172.20.29.194',  // IP da VPN para Hot Module Replacement
       port: 8080
     }
-  }
+  },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
