@@ -170,21 +170,14 @@ const Index = () => {
           >
             {/* Preview da Tela */}
             <div className="aspect-video bg-[hsl(var(--screen-bg))] relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* Simulação de conteúdo da tela */}
-                <div className="w-full h-full p-4 space-y-2">
-                  <div className="h-3 bg-[hsl(var(--screen-content))] rounded w-3/4"></div>
-                  <div className="h-3 bg-[hsl(var(--screen-content))] rounded w-1/2"></div>
-                  <div className="h-20 bg-[hsl(var(--screen-content))] rounded mt-4"></div>
-                  <div className="grid grid-cols-2 gap-2 mt-4">
-                    <div className="h-16 bg-[hsl(var(--screen-content))] rounded"></div>
-                    <div className="h-16 bg-[hsl(var(--screen-content))] rounded"></div>
-                  </div>
-                </div>
-              </div>
+              <iframe
+                src={`http://192.168.100.197:6080/vnc.html?autoconnect=true&path=?token=${machine.name}`}
+                className="w-full h-full border-0"
+                title={`VNC ${machine.name}`}
+              />
               
               {/* Status Indicator Overlay */}
-              <div className="absolute top-3 right-3 flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
+              <div className="absolute top-3 right-3 flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full pointer-events-none">
                 <div 
                   className={`w-2.5 h-2.5 rounded-full ${
                     machine.online 
@@ -295,19 +288,11 @@ const Index = () => {
             {/* Preview da Tela em Tamanho Grande */}
             <div className="p-6">
               <div className="aspect-video bg-[hsl(var(--screen-bg))] rounded-lg relative overflow-hidden border border-border">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {/* Simulação de conteúdo da tela */}
-                  <div className="w-full h-full p-12 space-y-6">
-                    <div className="h-8 bg-[hsl(var(--screen-content))] rounded w-3/4"></div>
-                    <div className="h-8 bg-[hsl(var(--screen-content))] rounded w-1/2"></div>
-                    <div className="h-48 bg-[hsl(var(--screen-content))] rounded mt-8"></div>
-                    <div className="grid grid-cols-3 gap-6 mt-8">
-                      <div className="h-32 bg-[hsl(var(--screen-content))] rounded"></div>
-                      <div className="h-32 bg-[hsl(var(--screen-content))] rounded"></div>
-                      <div className="h-32 bg-[hsl(var(--screen-content))] rounded"></div>
-                    </div>
-                  </div>
-                </div>
+                <iframe
+                  src={`http://192.168.100.197:6080/vnc.html?autoconnect=true&path=?token=${selectedMachine.name}`}
+                  className="w-full h-full border-0"
+                  title={`VNC ${selectedMachine.name}`}
+                />
               </div>
               
               {/* Info adicional */}
