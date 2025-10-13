@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, UserCircle } from "lucide-react";
 
 interface Machine {
@@ -10,6 +11,8 @@ interface Machine {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   // Estado da paginação
   const [currentPage, setCurrentPage] = useState(1);
   const machinesPerPage = 12;
@@ -24,6 +27,27 @@ const Index = () => {
   // Estado das máquinas da API
   const [allMachines, setAllMachines] = useState<Machine[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Verificar autenticação
+  useEffect(() => {
+    const authToken = sessionStorage.getItem('auth_token');
+    const authTime = sessionStorage.getItem('auth_time');
+    
+    if (!authToken || !authTime) {
+      navigate('/gateway', { replace: true });
+      return;
+    }
+    
+    // Verificar se o token não expirou (válido por 24 horas)
+    const tokenAge = Date.now() - parseInt(authTime);
+    const twentyFourHours = 24 * 60 * 60 * 1000;
+    
+    if (tokenAge > twentyFourHours) {
+      sessionStorage.removeItem('auth_token');
+      sessionStorage.removeItem('auth_time');
+      navigate('/gateway', { replace: true });
+    }
+  }, [navigate]);
 
   // Buscar dados da API
   useEffect(() => {

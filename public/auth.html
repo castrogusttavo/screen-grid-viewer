@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticação</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <script>
+        // Página de entrada que faz o POST automaticamente
+        const password = "M7a64tl0";
+        const hash = CryptoJS.MD5(password).toString();
+        
+        // Redireciona para o gateway com o hash
+        window.location.href = `/gateway?hash=${hash}`;
+    </script>
+</body>
+</html>
