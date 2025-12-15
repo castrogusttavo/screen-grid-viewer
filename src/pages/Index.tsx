@@ -53,7 +53,13 @@ const Index = () => {
   useEffect(() => {
     const fetchMachines = async () => {
       try {
-        const response = await fetch('http://192.168.100.197:5000/api/vnc-tokens');
+        // Buscar configuração do device
+        const configResponse = await fetch('/device.json');
+        const config = await configResponse.json();
+        const deviceId = config.device;
+        
+        // Buscar máquinas da API
+        const response = await fetch(`https://painel.stratustelecom.com.br/main/controll/operacao/api_vnc.php?device=${deviceId}`);
         const data = await response.json();
         
         const machines: Machine[] = data.map((item: { hostport: string; token: string }, index: number) => ({
